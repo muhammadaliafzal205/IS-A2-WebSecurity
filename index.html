@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareHub Security Lab</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>CareHub Portal</h1>
+        <p>Healthcare operations dashboard</p>
+      </div>
+      <span id="modeBadge" class="badge">LOADING</span>
+    </header>
+
+    <main class="layout">
+      <aside class="panel auth-panel">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <label>Username
+            <input type="text" name="username" value="demo-admin" required />
+          </label>
+          <label>Password
+            <input type="password" name="password" value="DemoPass!2026" required />
+          </label>
+          <button type="submit">Sign in</button>
+        </form>
+        <p id="loginStatus" class="status"></p>
+
+        <div class="demo-box">
+          <h3>SQLi payloads</h3>
+          <ul>
+            <li><code>' OR '1'='1</code></li>
+            <li><code>%' AND SUBSTR((SELECT username FROM users LIMIT 1),1,1)='d' --</code></li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="panel content-panel">
+        <div class="card-row">
+          <div class="card">
+            <h3>Patients</h3>
+            <div id="patientList" class="list"></div>
+          </div>
+          <div class="card">
+            <h3>Search notes</h3>
+            <form id="searchForm">
+              <input type="text" id="searchQuery" value="training" />
+              <button type="submit">Search</button>
+            </form>
+            <div id="searchResults" class="list"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Clinical note</h3>
+          <form id="noteForm">
+            <textarea id="noteText" rows="4" required>&lt;img src=x onerror=alert('Stored XSS')&gt;</textarea>
+            <button type="submit">Save note</button>
+          </form>
+          <div id="notesList" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h3>Change email</h3>
+          <form id="emailForm">
+            <input type="hidden" name="_csrf" id="csrfToken" value="" />
+            <input type="email" id="emailInput" value="admin@carehub.test" required />
+            <button type="submit">Update</button>
+          </form>
+          <p id="emailStatus" class="status"></p>
+        </div>
+
+        <div class="card">
+          <h3>Exploit labs</h3>
+          <div class="lab-grid">
+            <button class="lab-btn" data-demo="easy">Easy SQLi</button>
+            <button class="lab-btn" data-demo="intermediate">Intermediate SQLi</button>
+            <button class="lab-btn" data-demo="advanced">Advanced SQLi</button>
+            <a href="/dom-demo?id=%3Cscript%3Ealert('DOM-based')%3C%2Fscript%3E" class="lab-link">DOM XSS demo</a>
+          </div>
+          <pre id="labOutput">Results will appear here.</pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
